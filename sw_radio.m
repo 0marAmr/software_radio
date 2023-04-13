@@ -187,3 +187,32 @@ title('time autocorrelation');
 xlabel('tau');
 ylabel('R(tau)');
 
+%%Bandwidth
+L = 1400;             % Length of signal
+n = 2^nextpow2(L);
+T = 0.01;             % Sampling period
+Fs = 1/T;             % Sampling frequency                      
+
+t = (0:L-1)*T;        % Time vector
+
+%Compute the Fourier transform of the signal.
+PSD = fft(R_tau,n);
+PSD = fftshift(PSD);
+
+% f = Fs*(0:(L/2))/L;
+f = Fs * (-n/2:n/2-1)/n;
+
+%Compute the two-sided spectrum P2
+P2 = abs(PSD/n).^2;
+% P1 = P2(1:L/2+1);
+% P1(2:end-1) = 2*P1(2:end-1);
+
+Smoothed_PSD = smooth(P2); %Smooth the curve from the noise, to be plotted
+figure (4)
+subplot(1,1,1,'LineWidth',5)
+plot(f,Smoothed_PSD) 
+title("PSD")
+xlabel("f (Hz)")
+ylabel("S(f)")
+
+
